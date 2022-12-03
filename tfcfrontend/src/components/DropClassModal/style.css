@@ -1,0 +1,15 @@
+.text-orange {
+    color: orangered;
+}
+.cdm-subheading {
+    font-size: 0.8em;
+    color: grey;
+}
+
+.cdm-enrollable {
+    color: green;
+}
+
+.cdm-unenrollable {
+    color: red;
+}

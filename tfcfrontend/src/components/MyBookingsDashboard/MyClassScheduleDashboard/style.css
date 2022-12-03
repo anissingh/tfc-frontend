@@ -1,0 +1,27 @@
+.my-class-schedule-item-li {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid lightgray;
+    background-color: #f5f3f2;
+}
+
+.btn-change-page {
+    border-color: darkgrey;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+.my-booked-classes-container {
+    width: 100%;
+    margin-left: 0.15rem;
+    margin-bottom: 25px;
+    border-bottom: 1px solid lightgray;
+}
+
+@media(min-width: 800px) {
+
+    .my-booked-classes-container {
+        margin-left: 0;
+    }
+
+}

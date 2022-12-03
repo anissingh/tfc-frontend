@@ -1,0 +1,20 @@
+.form-group.required label:after {
+    content:"*";
+    color:red;
+}
+
+.bold-text {
+    font-weight: 600;
+}
+
+.login-btn {
+    background-color: orangered;
+    color: white;
+    border-radius: 0px;
+    font-weight: 600;
+}
+
+.login-btn:hover {
+    color: orangered;
+    background-color: white;
+}

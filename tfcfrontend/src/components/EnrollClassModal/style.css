@@ -1,0 +1,15 @@
+.text-orange {
+    color: orangered;
+}
+.cem-subheading {
+    font-size: 0.8em;
+    color: grey;
+}
+
+.cem-enrollable {
+    color: green;
+}
+
+.cem-unenrollable {
+    color: red;
+}

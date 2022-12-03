@@ -1,0 +1,128 @@
+.my-navbar {
+    height: 6vh;
+}
+
+.my-navbar-brand {
+    padding-left: 0.5rem!important;
+    margin-left: 10vw!important;
+    margin-right: 10vw!important;
+    font-weight: 600!important;
+    color: white;
+}
+
+.my-navbar-main {
+    justify-content: center;
+}
+
+.my-navbar-link {
+    color: white;
+}
+
+.my-navbar-end {
+    justify-content: end;
+    margin-right: 10vw!important;
+}
+
+.my-navbar-dropdown {
+    display: none;
+}
+
+.bg-orange {
+    background-color: orangered;
+}
+
+.my-dropdown {
+    display: none;
+}
+
+.my-dropdown-ul {
+    display: none;
+}
+
+.my-dropdown-li {
+    display: none;
+}
+
+.my-dropdown-link {
+    display: none;
+}
+
+@media (max-width: 850px) {
+    .my-navbar-brand {
+        margin-left: 4vw!important;
+        margin-right: 4vw!important;
+    }
+
+    .my-navbar-end {
+        margin-right: 4vw!important;
+    }
+
+}
+
+@media (max-width: 675px) {
+    .my-navbar-brand {
+        margin-left: 0!important;
+        margin-right: 0!important;
+    }
+
+    .my-navbar-end {
+        margin-right: 0!important;
+    }
+}
+
+@media (max-width: 550px) {
+    .my-navbar-main {
+        display: none;
+    }
+
+    .my-navbar-link {
+        display: none;
+    }
+
+    .my-navbar-end {
+        display: none;
+    }
+
+    .my-navbar-dropdown {
+        display: block;
+        background-color: orangered;
+        border: none;
+        color: white;
+    }
+
+    .my-dropdown {
+        display: block;
+    }
+
+    .my-dropdown-ul {
+        display: block;
+        margin-bottom: 0;
+    }
+
+    .my-dropdown-li {
+        display: block;
+        padding: 0.5rem;
+        text-align: center;
+        /*background-color: #fc642b;*/
+        background-color: orangered;
+    }
+
+    .my-dropdown-link {
+        display: inline;
+        text-decoration: none;
+        color: white;
+    }
+
+    .my-dropdown-link:hover {
+        color: white;
+        text-decoration: underline;
+    }
+
+    .non-hidden-nav-item-inline {
+        display: inline!important;
+    }
+
+    .non-hidden-nav-item-block {
+        display: block!important;
+    }
+}

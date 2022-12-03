@@ -1,0 +1,19 @@
+.my-navbar-end-item {
+    /*border-right: 1px solid white;*/
+    position: relative;
+    z-index: 0;
+}
+
+.my-navbar-end-item:before {
+    content : "";
+    position: absolute;
+    top: 25%;
+    height: 50%;
+    width: 100%;  /* or 100px */
+    border-right: 1px solid white;
+    z-index: -1;
+}
+
+.my-navbar-end-item:last-child:before {
+    border-right: none;
+}

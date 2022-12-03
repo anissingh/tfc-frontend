@@ -1,0 +1,15 @@
+.warning-container {
+    color: red;
+}
+
+.save-btn {
+    background-color: orangered;
+    color: white;
+    border-radius: 0px;
+    font-weight: 600;
+}
+
+.save-btn:hover {
+    color: orangered;
+    background-color: white;
+}

@@ -1,0 +1,46 @@
+.location-navbar {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    width: 100%!important;
+    height: 3.5vh!important;
+    background-color: #1f1e1e;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.location-pin {
+    color: orangered;
+    margin-right: 0.25rem;
+}
+
+.loc-nav-city-label {
+    color: white;
+    margin-right: 0.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.loc-nav-fas-link {
+    color: orangered;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.loc-nav-fas-link:hover {
+    color: orangered;
+    text-decoration: underline;
+}
+
+.loc-nav-register-link {
+    color: orangered;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.loc-nav-register-link:hover {
+    color: orangered;
+    text-decoration: underline;
+}

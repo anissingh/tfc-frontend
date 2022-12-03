@@ -1,0 +1,105 @@
+.my-account-container {
+    display: flex;
+    flex-direction: column;
+    height: 94vh;
+    margin-top: 1rem;
+}
+
+.my-account-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-information-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+    margin-left: 3rem;
+}
+
+.membership-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+    margin-left: 3rem;
+}
+
+
+.my-account-title {
+    font-weight: 700;
+}
+
+.user-name-font {
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.user-content-font {
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.edit-info-link {
+    color: orangered;
+}
+
+.edit-info-link:hover {
+    color: orangered;
+}
+
+.membership-info-title {
+    font-weight: 600;
+    display: inline;
+}
+
+.membership-active-status {
+    display: inline;
+    font-weight: 600;
+    color: #07e366;
+}
+
+.profile-picture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0.5rem;
+}
+
+
+@media (min-width: 860px) {
+    .my-account-row {
+        height: 20%;
+        display: flex;
+        flex-direction: row;
+        margin: 25px;
+        justify-content: center;
+        align-items: stretch;
+    }
+
+    .my-account-row:first-of-type {
+        margin-bottom: 50px;
+    }
+
+    .profile-information-container {
+        margin-left: 20px;
+        margin-right: 75px;
+        width: 20%;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0;
+    }
+
+    .membership-container {
+        margin-left: 75px;
+        margin-right: 20px;
+        width: 20%;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0;
+    }
+
+    .my-account-container {
+        margin-top: 0;
+    }
+}

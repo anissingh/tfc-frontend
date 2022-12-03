@@ -1,0 +1,101 @@
+.btn-orange-fade {
+    background-color: orangered;
+    color: white;
+    border-radius: 0px;
+    font-weight: 600;
+}
+
+.btn-orange-fade:hover {
+    color: orangered;
+    background-color: white;
+}
+
+.btn-light-fade {
+    background-color: white;
+    color: orangered;
+    border-radius: 0px;
+    font-weight: 600;
+}
+
+.btn-light-fade:hover {
+    background-color: lightgray;
+    color: orangered;
+}
+
+.btn-grey-border-text {
+    color: #706f6d;
+    background-color: white;
+    border-color: #706f6d;
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+.btn-grey-border-text:hover {
+    background-color: lightgray;
+    color: #706f6d;
+    border-color: #706f6d;
+    border-radius: 5px;
+}
+
+.btn-orange-border {
+    color: orangered;
+    background-color: white;
+    border-color: orangered;
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+.btn-orange-border:hover {
+    background-color: #fcbba2;
+    color: #706f6d;
+    border-color: orangered;
+    border-radius: 5px;
+}
+
+
+.btn-orange {
+    color: white;
+    background-color: orangered;
+    font-weight: 600;
+    border-radius: 0;
+}
+
+.btn-orange:hover {
+    color: white;
+    background-color: orangered;
+    font-weight: 600;
+}
+
+.btn-orange-grey-fade {
+    color: white;
+    background-color: orangered;
+    font-weight: 600;
+    border-radius: 0;
+}
+
+.btn-orange-grey-fade:hover {
+    color: white;
+    background-color: #db3d02;
+    font-weight: 600;
+    border-radius: 0;
+}
+
+.btn-white-grey-fade {
+    background-color: white;
+    color: orangered;
+    border-radius: 0;
+    font-weight: 600;
+}
+
+.btn-white-grey-fade:hover {
+    color: orangered;
+    background-color: #dedcdc;
+    border-radius: 0;
+    font-weight: 600;
+}
+
+.btn-change-page {
+    border-color: darkgrey;
+    margin-right: 2px;
+    margin-left: 2px;
+}

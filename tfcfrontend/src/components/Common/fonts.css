@@ -1,0 +1,29 @@
+.bold {
+    font-weight: bold;
+}
+
+.semi-bold {
+    font-weight: 600;
+}
+
+/**
+underline-style adapted from: https://codepen.io/smashtheshell/pen/aNjdJQ?editors=1100
+ */
+.underline-style {
+    text-decoration-color: orangered;
+    text-decoration-thickness: 5px;
+    display: inline-block;
+    position: relative;
+}
+
+.underline-style::after {
+    content: '';
+    height: 4px;
+    width: 10%;
+    background: #f24432;
+    position: absolute;
+    margin: auto;
+    bottom: -1.5vh;
+    left: 0;
+    right: 0;
+}

@@ -1,0 +1,136 @@
+.image-slider-container {
+    width: 90vw;
+    height: 80vh;
+    margin: 0 auto;
+}
+
+.studio-info-title {
+    font-weight: 600;
+    display: inline;
+}
+
+.studio-amenities-list {
+    max-height: 20vh;
+    max-width: 40vh;
+    margin-bottom: 10px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.class-schedule-item-li {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid lightgray;
+    background-color: #f5f3f2;
+}
+
+.st-dash-page-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+}
+
+.st-dash-club-info-col {
+
+}
+
+.st-dash-club-amenities-col {
+
+}
+
+.studio-map-container {
+    height: 65vh!important;
+}
+
+.st-dash-general-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%!important;
+    margin-bottom: 3rem;
+}
+
+.st-dash-club-amenities-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.st-dash-club-info-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.st-dash-club-info-wrapper {
+    margin-left: 1.5rem;
+}
+
+.st-dash-club-amenities-wrapper {
+    margin-left: 1.5rem;
+}
+
+.st-dash-club-class-schedule-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.st-dash-filter-container {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0.5rem;
+}
+
+.st-dash-classes-container {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 600px) {
+    .st-dash-club-info-wrapper {
+        margin-left: 3rem;
+    }
+
+    .st-dash-club-amenities-wrapper {
+        margin-left: 3rem;
+    }
+
+    .st-dash-general-container {
+        flex-direction: row;
+    }
+}
+
+@media (min-width: 1000px) {
+    .st-dash-club-info-col {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+
+    .st-dash-club-amenities-col {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+
+    .st-dash-club-info-wrapper {
+        align-self: center;
+        margin-left: 0;
+    }
+
+    .st-dash-club-amenities-wrapper {
+        align-self: center;
+        margin-left: 0;
+    }
+
+    .st-dash-club-class-schedule-container {
+        flex-direction: row;
+    }
+
+    .st-dash-filter-container {
+        flex: 0 0 auto;
+        width: 25%;
+        padding-bottom: 0;
+    }
+
+    .st-dash-classes-container {
+        flex: 0 0 auto;
+        width: 75%;
+    }
+}
