@@ -1,1 +1,1 @@
-## Toronto Fitness Centre Frontend
+## Toronto Fitness Center Frontend
