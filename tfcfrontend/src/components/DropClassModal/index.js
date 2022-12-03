@@ -6,7 +6,8 @@ import '../Common/alerts.css';
 import {useContext, useEffect, useState} from "react";
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
 import {LoginContext} from "../../clientinfo/clientinfo";
-import {capitalizeFirstLetter} from "../../utils/utils";
+import {beautifyDate, capitalizeFirstLetter} from "../../utils/utils";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 
 const DropClassModal = ({open, onClose, classInfo, onDrop}) => {
@@ -144,10 +145,13 @@ const DropClassModal = ({open, onClose, classInfo, onDrop}) => {
     if(!open) return null
 
     return (
-        <div className="overlay" onClick={onClose}>
+        <div className="overlay dp-overlay" onClick={() => {}}>
             <div className="modal-container ps-5 pe-5" onClick={(event) => {event.stopPropagation()}} style={{maxHeight: '50vh'}}>
                 <p className="close-btn" onClick={onClose}>&#x2715;</p>
                 <div className="container d-flex flex-column">
+                    <div className="row mb-3">
+                        <span><LocationOnIcon className="dp-pin"/> {classInfo.studioName}</span>
+                    </div>
                     <div className="row">
                         <p className="h3 text-orange">{classInfo.startTime} - {classInfo.endTime}</p>
                         <p>Duration: x minutes</p>
@@ -173,7 +177,7 @@ const DropClassModal = ({open, onClose, classInfo, onDrop}) => {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-orange-grey-fade" onClick={handleDrop}>Drop</button>
-                            <button className="btn btn-white-grey-fade" onClick={handleDropAll}>Drop all available classes</button>
+                            <button className="btn btn-white-grey-fade" onClick={handleDropAll}>Drop all classes of this type</button>
                         </div>
                         <p className={dropNotification.cls}>{dropNotification.content}</p>
                     </div>

@@ -1,3 +1,43 @@
 .class-schedule-item-background {
     background-color: #f5f3f2;
 }
+
+.class-schedule-item-pin {
+    color: orangered;
+    margin-right: 0.25rem;
+    max-width: 16px;
+    max-height: 16px;
+    align-self: start;
+}
+
+.csi-coach-container {
+    margin-bottom: 0.25rem;
+}
+
+.class-schedule-item-coach-name {
+    font-weight: 500;
+}
+
+.class-schedule-item-studio-name {
+    font-size: 0.8rem;
+}
+
+
+@media (min-width: 600px) {
+    .csi-coach-container {
+        align-self: center;
+    }
+
+    .csi-studio-name-container {
+        align-self: center;
+    }
+
+    .class-schedule-item-pin {
+        max-width: none;
+        max-height: none;
+    }
+
+    .class-schedule-item-studio-name {
+        font-size: 0.9rem;
+    }
+}

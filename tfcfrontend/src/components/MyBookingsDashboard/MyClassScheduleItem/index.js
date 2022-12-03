@@ -4,7 +4,8 @@ import '../../Common/buttons.css';
 import {useEffect, useState} from "react";
 import {BASE_URL, BASE_PORT} from "../../../settings/settings";
 import DropClassModal from "../../DropClassModal";
-
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import {beautifyDate} from "../../../utils/utils";
 
 const MyClassScheduleItem = ({classInfo, updateParent}) => {
 
@@ -42,15 +43,15 @@ const MyClassScheduleItem = ({classInfo, updateParent}) => {
             <div className="row mt-2">
                 <div className="col-2 align-self-center">
                     <div className="d-flex flex-column">
-                        <div className="align-self-center">
-                            <p className="mb-1"><b>Date: </b>{classInfo.date}</p>
+                        <div className="ms-4">
+                            <p className="mb-1"><b>{beautifyDate(classInfo.date)}</b></p>
                             <p>{classInfo.startTime} &#9679; {classInfo.endTime}</p>
                         </div>
                     </div>
                 </div>
                 <div className="col-1">
                 </div>
-                <div className="col-5 align-self-center">
+                <div className="col-4 align-self-center">
                     <div className="d-flex flex-column">
                         <div className="align-self-center w-100">
                             <p className="mb-0"><b>{classInfo.cls.name}</b></p>
@@ -60,11 +61,15 @@ const MyClassScheduleItem = ({classInfo, updateParent}) => {
                         </div>
                     </div>
                 </div>
-                <div className="col-2 align-self-center">
+                <div className="col-3 align-self-center">
                     <div className="d-flex flex-column">
-                        <div className="align-self-center">
-                            <p>{classInfo.coach}</p>
-                        </div>
+
+                        <p className="csi-coach-container"><span className="class-schedule-item-coach-name">{classInfo.coach}</span></p>
+                        <p className="csi-studio-name-container">
+                            <LocationOnIcon className="class-schedule-item-pin"/>
+                            <span className="class-schedule-item-studio-name">{classInfo.studioName}</span>
+                        </p>
+
                     </div>
                 </div>
                 <div className="col-2 align-self-center">

@@ -13,3 +13,12 @@
 .cdm-unenrollable {
     color: red;
 }
+
+.dp-overlay {
+    background: none!important;
+}
+
+.dp-pin {
+    color: orangered;
+    margin-right: 0.25rem;
+}

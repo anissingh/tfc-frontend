@@ -3,6 +3,7 @@ import './style.css';
 import '../../../Common/buttons.css'
 import {useEffect, useState} from "react";
 import {BASE_URL, BASE_PORT} from "../../../../settings/settings";
+import {beautifyDate} from "../../../../utils/utils";
 
 
 const MyClassHistoryItem = ({classInfo, updateParent}) => {
@@ -32,8 +33,8 @@ const MyClassHistoryItem = ({classInfo, updateParent}) => {
             <div className="row mt-2">
                 <div className="col-2 align-self-center">
                     <div className="d-flex flex-column">
-                        <div className="align-self-center">
-                            <p className="mb-1"><b>Date: </b>{classInfo.date}</p>
+                        <div className="ms-4">
+                            <p className="mb-1"><b>{beautifyDate(classInfo.date)}</b></p>
                             <p>{classInfo.startTime} &#9679; {classInfo.endTime}</p>
                         </div>
                     </div>

@@ -15,7 +15,6 @@ const StudioDashboard = ({studioId}) => {
 
     // TODO: when force update is called, set page number to 1
     // TODO: Not setting count = 0 on filter to prevent flicker -- make sure this is ok
-    // TODO: Set to current location on initial load (through props?)
 
     const loginInfo = useContext(LoginContext)
     const [studioFound, setStudioFound] = useState(false)
@@ -30,15 +29,12 @@ const StudioDashboard = ({studioId}) => {
     const [studioImages, setStudioImages] = useState([])
     const [studioAmenities, setStudioAmenities] = useState([])
     const [classes, setClasses] = useState([])
-    const [pageInfo, setPageInfo] = useState({
+    const [searchInfo, setSearchInfo] = useState({
         page: 1,
         next: null,
         prev: null,
-        count: 0
-    })
-    const [forceUpdate, setForceUpdate] = useState(false)
-
-    const [filterParams, setFilterParams] = useState({
+        count: 0,
+        forceUpdate: false,
         classNames: [],
         coachNames: [],
         dates: [],
@@ -58,20 +54,22 @@ const StudioDashboard = ({studioId}) => {
 
     const handleNext = () => {
         // Only allow this to happen if next page exists
-        if(pageInfo.next === null) return
+        if(searchInfo.next === null) return
 
-        setPageInfo({...pageInfo, page: pageInfo.page + 1})
+        setSearchInfo({...searchInfo, page: searchInfo.page + 1})
     }
 
     const handlePrev = () => {
         // Only allow this to happen if previous page exists
-        if(pageInfo.prev === null) return
+        if(searchInfo.prev === null) return
 
-        setPageInfo({...pageInfo, page: pageInfo.page - 1})
+        setSearchInfo({...searchInfo, page: searchInfo.page - 1})
     }
 
     const forceUpdateClassInfo = () => {
-        setForceUpdate(!forceUpdate)
+        setSearchInfo({...searchInfo,
+            forceUpdate: !searchInfo.forceUpdate
+        })
     }
 
     const generateDirectionsLink = () => {
@@ -88,19 +86,17 @@ const StudioDashboard = ({studioId}) => {
     }
 
     const onFilter = (classFilters, coachFilters, dateFilters, startTime, endTime) => {
-        setFilterParams({
+        setSearchInfo({
+            ...searchInfo,
             classNames: classFilters,
             coachNames: coachFilters,
             dates: dateFilters,
             startTime: startTime,
-            endTime: endTime
-        })
-
-        setPageInfo({
-            ...pageInfo,
+            endTime: endTime,
             page: 1,
             next: null,
-            prev: null
+            prev: null,
+            forceUpdate: !searchInfo.forceUpdate
         })
     }
 
@@ -111,7 +107,6 @@ const StudioDashboard = ({studioId}) => {
                     setStudioFound(false)
                     throw new Error('Page not found.')
                 } else if(res.status !== 200) {
-                    // TODO: Display error page instead
                     setStudioFound(false)
                     throw new Error('Unknown error occurred.')
                 } else {
@@ -142,22 +137,22 @@ const StudioDashboard = ({studioId}) => {
     useEffect(() => {
         let searchParams = new URLSearchParams()
 
-        for(const filter of filterParams.classNames) {
+        for(const filter of searchInfo.classNames) {
             searchParams.append('class-name', filter)
         }
-        for(const filter of filterParams.coachNames) {
+        for(const filter of searchInfo.coachNames) {
             searchParams.append('coach', filter)
         }
-        for(const filter of filterParams.dates) {
+        for(const filter of searchInfo.dates) {
             searchParams.append('date', filter)
         }
-        if(filterParams.startTime !== '') {
-            searchParams.append('start-time', filterParams.startTime )
+        if(searchInfo.startTime !== '') {
+            searchParams.append('start-time', searchInfo.startTime )
         }
-        if(filterParams.endTime  !== '') {
-            searchParams.append('end-time', filterParams.endTime )
+        if(searchInfo.endTime  !== '') {
+            searchParams.append('end-time', searchInfo.endTime )
         }
-        searchParams.append('page', `${pageInfo.page}`)
+        searchParams.append('page', `${searchInfo.page}`)
 
         fetch(`http://${BASE_URL}:${BASE_PORT}/studios/${studioId}/classes/search/?` + searchParams)
             .then(res => {
@@ -169,29 +164,19 @@ const StudioDashboard = ({studioId}) => {
                 }
             })
             .then(res => {
-                setPageInfo({
-                    ...pageInfo,
+                setSearchInfo(searchInfo => ({
+                    ...searchInfo,
                     next: res.next,
                     prev: res.previous,
                     count: res.count
-                })
+                }))
                 console.log(res.results)
                 setClasses(res.results)
             })
             .catch((error) => {
                 console.log(error.message)
             })
-    }, [filterParams, pageInfo.page, studioId, forceUpdate])
-
-    // useEffect(() => {
-    //     setFilterParams({
-    //         classNames: [],
-    //         coachNames: [],
-    //         dates: [],
-    //         startTime: '',
-    //         endTime: ''
-    //     })
-    // }, [])
+    }, [searchInfo.classNames, searchInfo.coachNames, searchInfo.dates, searchInfo.endTime, searchInfo.page, searchInfo.startTime, studioId, searchInfo.forceUpdate])
 
     if(!studioFound) return <DoesNotExist />
 
@@ -242,7 +227,7 @@ const StudioDashboard = ({studioId}) => {
                         <FilterStudioClassSchedule onFilter={onFilter}/>
                     </div>
                     <div className="st-dash-classes-container">
-                        {pageInfo.count > 0 ? (
+                        {searchInfo.count > 0 ? (
                             <>
                             <ul className="list-unstyled">
                                 {classes.map((clsInstance, index) => (
@@ -253,6 +238,7 @@ const StudioDashboard = ({studioId}) => {
                                                 id: clsInstance.cls.id,
                                                 name: clsInstance.cls.name
                                             },
+                                            studioName: clsInstance.cls.studio.name,
                                             date: clsInstance.date,
                                             startTime: clsInstance.start_time,
                                             endTime: clsInstance.end_time,
@@ -264,8 +250,8 @@ const StudioDashboard = ({studioId}) => {
                                 ))}
                             </ul>
                             <div className="align-self-center">
-                                <button className={"btn btn-change-page" + (pageInfo.prev === null ? ' disabled' : '')} onClick={handlePrev}>Previous</button>
-                                <button className={"btn btn-change-page" + (pageInfo.next === null ? ' disabled' : '')} onClick={handleNext}>Next</button>
+                                <button className={"btn btn-change-page" + (searchInfo.prev === null ? ' disabled' : '')} onClick={handlePrev}>Previous</button>
+                                <button className={"btn btn-change-page" + (searchInfo.next === null ? ' disabled' : '')} onClick={handleNext}>Next</button>
                             </div>
                             </>
                         ) : (

@@ -7,6 +7,7 @@ import {useContext, useEffect, useState} from "react";
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
 import {LoginContext} from "../../clientinfo/clientinfo";
 import {capitalizeFirstLetter} from "../../utils/utils";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 
 const EnrollClassModal = ({open, onClose, classInfo, onEnroll}) => {
@@ -144,10 +145,13 @@ const EnrollClassModal = ({open, onClose, classInfo, onEnroll}) => {
     if(!open) return null
 
     return (
-        <div className="overlay" onClick={onClose}>
+        <div className="overlay en-modal-overlay" onClick={() => {}}>
             <div className="modal-container ps-5 pe-5" onClick={(event) => {event.stopPropagation()}} style={{maxHeight: '50vh'}}>
                 <p className="close-btn" onClick={onClose}>&#x2715;</p>
                 <div className="container d-flex flex-column">
+                    <div className="row mb-3">
+                        <span><LocationOnIcon className="en-pin"/> {classInfo.studioName}</span>
+                    </div>
                     <div className="row">
                         <p className="h3 text-orange">{classInfo.startTime} - {classInfo.endTime}</p>
                         <p>Duration: x minutes</p>

@@ -40,7 +40,7 @@ const MyClassScheduleDashboard = ({userId}) => {
         setPageInfo({...pageInfo, page: 1, forceUpdate: !pageInfo.forceUpdate, count: 0})
         setUserDropNotification({
             cls: 'success-notification',
-            content: 'Success.'
+            content: 'Success'
         })
     }
 
@@ -100,6 +100,7 @@ const MyClassScheduleDashboard = ({userId}) => {
                                         id: clsInstance.cls.id,
                                         name: clsInstance.cls.name
                                     },
+                                    studioName: clsInstance.cls.studio.name,
                                     date: clsInstance.date,
                                     startTime: clsInstance.start_time,
                                     endTime: clsInstance.end_time,

@@ -13,3 +13,12 @@
 .cem-unenrollable {
     color: red;
 }
+
+.en-modal-overlay {
+    background: none!important;
+}
+
+.en-pin {
+    color: orangered;
+    margin-right: 0.25rem;
+}
