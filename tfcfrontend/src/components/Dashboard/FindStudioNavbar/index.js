@@ -9,8 +9,8 @@ const FindStudioNavbar = () => {
 
     const [locName, setLocName] = useState('Unknown')
 
-    const API_KEY = 'AIzaSyAVIpBPUVZn01E_eztRpuBqa5sRt3ukL5k'
-    Geocode.setApiKey('AIzaSyAVIpBPUVZn01E_eztRpuBqa5sRt3ukL5k')
+    const API_KEY = '*'
+    Geocode.setApiKey(API_KEY)
     Geocode.setLanguage('en')
     Geocode.setLocationType('ROOFTOP')
 
