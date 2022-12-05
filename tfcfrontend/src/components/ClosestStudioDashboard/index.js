@@ -15,12 +15,12 @@ import NearMeIcon from '@mui/icons-material/NearMe';
 
 const ClosestStudioDashboard = ({startLoc}) => {
 
-    const API_KEY = 'AIzaSyAVIpBPUVZn01E_eztRpuBqa5sRt3ukL5k'
+    const API_KEY = '*'
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: API_KEY
     })
 
-    Geocode.setApiKey('AIzaSyAVIpBPUVZn01E_eztRpuBqa5sRt3ukL5k')
+    Geocode.setApiKey(API_KEY)
     Geocode.setLanguage('en')
     Geocode.setLocationType('ROOFTOP')
 
