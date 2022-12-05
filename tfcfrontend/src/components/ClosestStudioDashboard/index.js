@@ -13,10 +13,7 @@ import Geocode from "react-geocode"
 import NearMeIcon from '@mui/icons-material/NearMe';
 
 
-// TODO: Set location to current location on load
-// TODO: Make current location more accurate
-
-const ClosestStudioDashboard = () => {
+const ClosestStudioDashboard = ({startLoc}) => {
 
     const API_KEY = 'AIzaSyAVIpBPUVZn01E_eztRpuBqa5sRt3ukL5k'
     const { isLoaded } = useJsApiLoader({
@@ -39,8 +36,8 @@ const ClosestStudioDashboard = () => {
         next: null,
         prev: null,
         forceUpdate: false,
-        lat: 43.6532,
-        lng: -79.3470,
+        lat: startLoc.lat,
+        lng: startLoc.lng,
         studioNames: [],
         studioAmenities: [],
         classNames: [],
@@ -104,6 +101,18 @@ const ClosestStudioDashboard = () => {
         );
     }
 
+    const onSearchFromClick = (ev) => {
+        setSearchInfo({
+            ...searchInfo,
+            lat: ev.latLng.lat(),
+            lng: ev.latLng.lng(),
+            page: 1,
+            prev: null,
+            next: null,
+            forceUpdate: !searchInfo.forceUpdate
+        })
+    }
+
     const onLocationReset = () => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(position => {
@@ -111,7 +120,8 @@ const ClosestStudioDashboard = () => {
                 setSearchInfo({
                     ...searchInfo,
                     lat: position.coords.latitude,
-                    lng: position.coords.longitude
+                    lng: position.coords.longitude,
+                    page: 1
                 })
             })
         }
@@ -121,19 +131,24 @@ const ClosestStudioDashboard = () => {
         window.open(`https://www.google.com/maps/dir/?api=1&origin=${searchInfo.lat},${searchInfo.lng}&destination=${dLat},${dLong}`, '_blank')
     }
 
-    useEffect(() => {
-        // TODO: Don't forget
-        // if ("geolocation" in navigator) {
-        //     navigator.geolocation.getCurrentPosition(position => {
-        //         setSearchInfo({
-        //             ...searchInfo,
-        //             lat: position.coords.latitude,
-        //             lng: position.coords.longitude
-        //         })
-        //     })
-        // }
+    const loadMap = (map) => {
+        setMap(map)
+    }
 
-        console.log("Ran")
+    const panToStudioLoc = (lat, lng) => {
+        map.panTo({lat: parseFloat(lat), lng: parseFloat(lng)})
+    }
+
+    useEffect(() => {
+        setSearchInfo(searchInfo => ({
+            ...searchInfo,
+            lat: startLoc.lat,
+            lng: startLoc.lng,
+            page: 1
+        }))
+    }, [startLoc])
+
+    useEffect(() => {
         let searchParams = new URLSearchParams()
 
         for(const filter of searchInfo.studioNames) {
@@ -155,7 +170,6 @@ const ClosestStudioDashboard = () => {
 
         setSearchError('')
 
-
         fetch(`http://${BASE_URL}:${BASE_PORT}/studios/search/?` + searchParams)
         .then(res => {
             if(res.status !== 200) {
@@ -176,7 +190,6 @@ const ClosestStudioDashboard = () => {
             setMarkers(res.results)
         })
         .catch((error) => {
-            // TODO: Handle this properly by displaying something to the user
             console.log(error)
         })
         // map.panTo(loc)
@@ -184,7 +197,6 @@ const ClosestStudioDashboard = () => {
     searchInfo.coachNames, searchInfo.studioNames, searchInfo.studioAmenities])
 
     if(!isLoaded) {
-        // TODO: Make pretty
         return <h1>Loading</h1>
     }
 
@@ -235,6 +247,7 @@ const ClosestStudioDashboard = () => {
                                 }}
                                 key={`st-item-${studio.id}-1`}
                                 onGetDirections={getDirectionsLink}
+                                onPanTo={() => {panToStudioLoc(studio.latitude, studio.longitude)}}
                                 />
                             </li>
                         ))}
@@ -246,17 +259,63 @@ const ClosestStudioDashboard = () => {
             <div className="studio-map-container studio-map-col">
                 <GoogleMap
                     center={{lat: searchInfo.lat, lng: searchInfo.lng}}
-                    zoom={15}
+                    zoom={13}
                     mapContainerStyle={{width: '99%', height: '100%'}}
                     options={{
                         streetViewControl: false,
                         mapTypeControl: false,
-                        fullscreenControl: false
+                        fullscreenControl: false,
+                        styles: [
+                            {
+                                featureType: "poi",
+                                stylers: [
+                                    { visibility: "off" }
+                                ]
+                            },
+                            {
+                                featureType: "transit",
+                                stylers: [
+                                    { visibility: "off" }
+                                ]
+                            },
+                            {
+                                featureType: "water",
+                                stylers: [
+                                    { visibility: "simple" },
+                                    { color: "#adddec" }
+                                ]
+                            },
+                            {
+                                featureType: 'landscape',
+                                stylers: [
+                                    { visibility: "simple" },
+                                    { color: "#f0f0f1" }
+                                ]
+                            },
+                            {
+                                featureType: "road.highway",
+                                stylers: [
+                                    { visibility: "simple" },
+                                    { color: "#e2e2e2" }
+                                ]
+                            },
+                            {
+                                featureType: "road.local",
+                                stylers: [
+                                    { visibility: "simple" },
+                                    { color: "#ffffff" }
+                                ]
+                            }
+                        ]
                     }}
-                    onLoad={(map => setMap(map))}
+                    onLoad={(map => loadMap(map))}
+                    onClick={(ev) => {onSearchFromClick(ev)}}
                 >
                     {markers.map((studio) => (
-                        <MarkerF position={{lat: parseFloat(studio.latitude), lng: parseFloat(studio.longitude)}} key={studio.id} />
+                        <MarkerF
+                            position={{lat: parseFloat(studio.latitude), lng: parseFloat(studio.longitude)}}
+                            key={studio.id}
+                        />
                     ))}
                 </GoogleMap>
             </div>

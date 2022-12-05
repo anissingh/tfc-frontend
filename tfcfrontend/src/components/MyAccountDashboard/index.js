@@ -1,7 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
-import {useContext, useEffect, useState} from "react";
-import {LoginContext, NO_ACCESS_TOKEN} from "../../clientinfo/clientinfo";
+import {useEffect, useState} from "react";
 import Navbar from "../Navbar/Navbar";
 import Unauthorized from "../Unauthorized";
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
@@ -11,13 +10,10 @@ import EditPaymentMethodModal from "../EditPaymentMethodModal";
 import PaymentHistoryModal from "../PaymentHistoryModal";
 import CancelSubscriptionConfirmationModal from "../CancelSubscriptionConfirmationModal";
 import GreetingWrapper from "../MyProfileDashboard/GreetingWrapper";
+import {beautifyDate} from "../../utils/utils";
 
-// TODO: Used getactivesubscription because if we use future payments it will tell the user they
-// TODO: do not have an active subscription when they actually do
 
 const MyAccountDashboard = () => {
-
-    const loginInfo = useContext(LoginContext)
 
     const [openModal, setOpenModal] = useState(false)
     const [openPaymentModal, setOpenPaymentModal] = useState(false)
@@ -34,13 +30,21 @@ const MyAccountDashboard = () => {
         avatar: ''
     })
 
-    const [membershipInfo, setMembershipInfo] = useState({
+    const [paymentInfo, setPaymentInfo] = useState({
         nextPaymentDay: '',
         cardNumber: '',
         amount: '',
         frequency: '',
         name: '',
-        active: ''
+    })
+
+    const [membershipStatus, setMembershipStatus] = useState('')
+
+    const [cardInfo, setCardInfo] = useState({
+        number: '',
+        holderName: '',
+        expirationDate: '',
+        cvv: ''
     })
 
     const updateCardInfo = () => {
@@ -51,20 +55,23 @@ const MyAccountDashboard = () => {
         return '(' + pNum.slice(0, 3) + ') ' + pNum.slice(3, 6) + '-' + pNum.slice(6);
     }
 
+    const stripExpDate = (date) => {
+        return date.slice(5, 7) + '/' + date.slice(0, 4)
+    }
+
     useEffect(() => {
         fetch(`http://${BASE_URL}:${BASE_PORT}/accounts/view/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             },
             body: JSON.stringify({
-                email: loginInfo.email
+                email: localStorage.getItem('EMAIL')
             })
         })
             .then(res => {
                 if(res.status !== 200) {
-                    // TODO: Handle
                     throw new Error('Error occurred.')
                 } else {
                     return res.json()
@@ -87,17 +94,16 @@ const MyAccountDashboard = () => {
                 console.log(error.message)
             })
         
-    }, [loginInfo])
+    }, [])
     
     useEffect(() => {
         if((profileInfo.id) === '') return
 
         fetch(`http://${BASE_URL}:${BASE_PORT}/subscriptions/user/${profileInfo.id}/payments/future/`, {
-            headers: {'Authorization': `Bearer ${loginInfo.accessToken}`}
+            headers: {'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`}
         })
             .then(res => {
                 if(res.status !== 200) {
-                    // TODO: Handle
                     throw new Error('Error occurred.')
                 } else {
                     return res.json()
@@ -105,30 +111,92 @@ const MyAccountDashboard = () => {
             })
             .then(res => {
                 if(res.status !== 'success') {
-                    setMembershipInfo({
-                        active: 'FALSE'
+                    setPaymentInfo({
+                        nextPaymentDay: res.next_payment_day,
+                        cardNumber: '',
+                        amount: '',
+                        frequency: '',
                     })
-                    // TODO: Handle better
-                    throw new Error('Cancelled subscription.')
+                    throw new Error('No future payment.')
                 } else {
                     return res.payment_info
                 }
             })
             .then(res => {
-                setMembershipInfo({
+                setPaymentInfo({
                     nextPaymentDay: res.next_payment_day,
                     cardNumber: res.card_number,
                     amount: res.amount,
                     frequency: res.recurrence,
-                    active: 'TRUE'
                 })
             })
             .catch((error) => {
                 console.log(error.message)
             })
-    }, [loginInfo.accessToken, profileInfo.id, forceUpdate])
 
-    if(loginInfo.accessToken === NO_ACCESS_TOKEN) {
+        fetch(`http://${BASE_URL}:${BASE_PORT}/subscriptions/user/active/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
+            },
+            body: JSON.stringify({
+                email: localStorage.getItem('EMAIL')
+            })
+        })
+            .then(res => {
+                if(res.status !== 200) {
+                    throw new Error('Error occurred.')
+                } else {
+                    return res.json()
+                }
+            })
+            .then(res => {
+                if(res.status === 'user has an active subscription') {
+                    setMembershipStatus('TRUE')
+                } else {
+                    setMembershipStatus('FALSE')
+                }
+            })
+            .catch((error) => {
+                console.log(error.message)
+            })
+    }, [profileInfo.id, forceUpdate])
+
+
+    useEffect(() => {
+        fetch(`http://${BASE_URL}:${BASE_PORT}/subscriptions/user/card/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
+            },
+            body: JSON.stringify({
+                email: localStorage.getItem('EMAIL')
+            })
+        })
+            .then(res => {
+                if(res.status !== 200) {
+                    throw new Error('Error occurred')
+                } else {
+                    return res.json()
+                }
+            })
+            .then(res => {
+                setCardInfo(cardInfo => ({
+                    number: res.card.number,
+                    holderName: res.card.holder_name,
+                    expirationDate: res.card.expiration_date,
+                    cvv: res.card.cvv
+                }))
+            })
+            .catch((error) => {
+                console.log(error.message)
+            })
+    }, [profileInfo.id, forceUpdate])
+
+
+    if(localStorage.getItem('ACCESS_TOKEN') === null) {
         return (
             <div className="container-fluid p-0">
                 <Navbar />
@@ -140,8 +208,6 @@ const MyAccountDashboard = () => {
     }
 
     // User is logged in here
-    // TODO: Subscription cancelled formatting
-    // TODO: Fetch card info using new endpoint, add data to card serializer
     return (
         <div className="container-fluid p-0">
             <EditPaymentMethodModal open={openModal} onClose={() => {setOpenModal(false)}} updateParentCard={updateCardInfo}/>
@@ -175,28 +241,43 @@ const MyAccountDashboard = () => {
                     <div className="membership-container">
                         <h1 className="h3 my-account-title">My Subscription</h1>
                         <div>
-                            {
-                                membershipInfo.active === 'TRUE' ? (
-                                    <>
-                                    <p className="user-content-font"> <p className="membership-info-title">Next Payment Date:</p> {membershipInfo.nextPaymentDay}</p>
-                                    <p className="user-content-font"><p className="membership-info-title">Amount:</p> ${membershipInfo.amount}</p>
-                                    <p className="user-content-font"><p className="membership-info-title">Recurs:</p> {membershipInfo.frequency}</p>
-                                    <p className="user-content-font"><p className="membership-info-title">Active:</p>
-                                    <p className="membership-active-status"> {membershipInfo.active}</p>
-                                    </p>
-                                    <button className="btn btn-orange-border" style={{marginRight: '2px'}}
-                                    onClick={() => {setOpenCancelSubscriptionModal(true)}}>Cancel</button>
-                                    <button className="btn btn-orange-border" style={{marginLeft: '2px'}}
-                                    onClick={() => {navigate('/memberships')}}>Update</button>
-                                    </>
-                                ) : (
-                                    <>
-                                    <p className="mb-1">No active subscription.</p>
-                                    <button className="btn btn-orange-border"
-                                    onClick={() => {navigate('/memberships')}}>Subscribe Now</button>
-                                    </>
-                                )
-                            }
+                            {(() => {
+                                if (membershipStatus === 'TRUE' && paymentInfo.frequency !== '') {
+                                    return (
+                                        <>
+                                        <p className="user-content-font"> <span className="membership-info-title">Next Payment Date:</span> {beautifyDate(paymentInfo.nextPaymentDay)}</p>
+                                        <p className="user-content-font"><span className="membership-info-title">Amount:</span> ${paymentInfo.amount}</p>
+                                        <p className="user-content-font"><span className="membership-info-title">Recurs:</span> {paymentInfo.frequency}</p>
+                                        <p className="user-content-font"><span className="membership-info-title">Active:</span>
+                                        <span className="membership-active-status"> {membershipStatus}</span></p>
+
+                                        <button className="btn btn-orange-border" style={{marginRight: '2px'}}
+                                                onClick={() => {setOpenCancelSubscriptionModal(true)}}>Cancel</button>
+                                        <button className="btn btn-orange-border" style={{marginLeft: '2px'}}
+                                                onClick={() => {navigate('/memberships')}}>Update</button>
+                                        </>
+                                    )
+                                } else if (membershipStatus === 'TRUE') {
+                                    return (
+                                        <>
+                                        <p className="user-content-font"> <span className="membership-info-title">Next Payment Date:</span> <span>Cancelled</span></p>
+                                        <p className="user-content-font"><span className="membership-info-title">Active:</span>
+                                            <span className="membership-active-status"> {membershipStatus}</span></p>
+                                        <p className="user-content-font"><span className="membership-info-title">Active Until: </span> {beautifyDate(paymentInfo.nextPaymentDay)}</p>
+                                        <button className="btn btn-orange-border"
+                                                onClick={() => {navigate('/memberships')}}>Re-Subscribe</button>
+                                        </>
+                                    )
+                                } else {
+                                    return (
+                                        <>
+                                            <p className="mb-1">No active subscription.</p>
+                                            <button className="btn btn-orange-border"
+                                                    onClick={() => {navigate('/memberships')}}>Subscribe Now</button>
+                                        </>
+                                    )
+                                }
+                            })()}
                         </div>
                     </div>
 
@@ -208,9 +289,12 @@ const MyAccountDashboard = () => {
                         <h1 className="h3 my-account-title">Payment Method</h1>
                         <div>
                             {
-                                membershipInfo.active === 'TRUE' ? (
+                                cardInfo.number !== '' ? (
                                     <>
-                                    <p className="user-content-font"><p className="membership-info-title">Card Number:</p> {membershipInfo.cardNumber}</p>
+                                    <p className="user-content-font"><span className="membership-info-title">Card Number:</span> {cardInfo.number}</p>
+                                    <p className="user-content-font"><span className="membership-info-title">Cardholder Name:</span> {cardInfo.holderName}</p>
+                                    <p className="user-content-font"><span className="membership-info-title">Expiration Date:</span> {stripExpDate(cardInfo.expirationDate)}</p>
+                                    <p className="user-content-font"><span className="membership-info-title">CVV:</span> {cardInfo.cvv}</p>
                                     <button className="btn btn-orange-border" onClick={() => setOpenModal(true)}>Edit</button>
                                     </>
                                 ) : (

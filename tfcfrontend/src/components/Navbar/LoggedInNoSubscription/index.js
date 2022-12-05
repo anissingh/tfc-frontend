@@ -1,18 +1,10 @@
 import {Link} from "react-router-dom";
-import {useContext, useState} from "react";
-import {LoginContext, NO_ACCESS_TOKEN, NO_EMAIL} from "../../../clientinfo/clientinfo";
+import {useState} from "react";
 import '../Navbar/style.css'
 import './style.css'
 import MenuIcon from '@mui/icons-material/Menu';
 
-const LoggedInNoSubscriptionNavbar = () => {
-
-    const loginInfo = useContext(LoginContext)
-
-    const logOut = () => {
-        loginInfo.setAccessToken(NO_ACCESS_TOKEN)
-        loginInfo.setEmail(NO_EMAIL)
-    }
+const LoggedInNoSubscriptionNavbar = ({logOut}) => {
 
     const [openDropdown, setOpenDropdown] = useState(false)
 

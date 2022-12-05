@@ -20,6 +20,10 @@ const StudioListItem = (props) => {
         return '(' + pNum.slice(0, 3) + ') ' + pNum.slice(3, 6) + '-' + pNum.slice(6);
     }
 
+    const beautifyPostalCode = (pCode) => {
+        return pCode.slice(0, 3) + ' ' + pCode.slice(3)
+    }
+
     useEffect(() => {
         setStudioInfo({
             id: props.studioInfo.id,
@@ -34,12 +38,12 @@ const StudioListItem = (props) => {
 
 
     return (
-        <div className="studio-item">
+        <div className="studio-item" onClick={props.onPanTo}>
             <div>
                 <p className="h4">{studioInfo.name}</p>
                 <p className="studio-item-subtext">{studioInfo.address}</p>
                 <p className="studio-item-subtext">{studioInfo.phone}</p>
-                <p className="studio-item-subtext">x km away</p>
+                <p className="studio-item-subtext">{beautifyPostalCode(studioInfo.postal_code)}</p>
             </div>
             <div className="flex-container">
                 <button className="flex-child btn btn-grey-border-text studio-item-button-text"

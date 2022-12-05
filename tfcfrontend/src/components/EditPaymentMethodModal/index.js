@@ -2,8 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import '../Common/buttons.css';
 import '../Common/alerts.css';
-import {useContext, useState} from "react";
-import {LoginContext, NO_ACCESS_TOKEN} from "../../clientinfo/clientinfo";
+import {useState} from "react";
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
 
 const EditPaymentMethodModal = ({open, onClose, updateParentCard}) => {
@@ -20,7 +19,6 @@ const EditPaymentMethodModal = ({open, onClose, updateParentCard}) => {
         cls: 'notification'
     })
 
-    const loginInfo = useContext(LoginContext)
 
     const update = (field, value) => {
         setFormData({...formData, [field]: value})
@@ -29,7 +27,7 @@ const EditPaymentMethodModal = ({open, onClose, updateParentCard}) => {
     const handleSubmit = (event) => {
         event.preventDefault()
 
-        if(loginInfo.accessToken === NO_ACCESS_TOKEN) {
+        if(localStorage.getItem('ACCESS_TOKEN') === null) {
             setUpdatePaymentNotification({
                 cls: 'notification',
                 content: 'Please login to subscribe.'
@@ -41,10 +39,10 @@ const EditPaymentMethodModal = ({open, onClose, updateParentCard}) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             },
             body: JSON.stringify({
-                email: loginInfo.email,
+                email: localStorage.getItem('EMAIL'),
                 card_number: formData.cardNumber,
                 cardholder_name: formData.cardHolderName,
                 expiration_date: formData.expDate,
@@ -130,7 +128,7 @@ const EditPaymentMethodModal = ({open, onClose, updateParentCard}) => {
                         </div>
                     </div>
                     <p className={updatePaymentNotification.cls}>{updatePaymentNotification.content}</p>
-                    <button type="submit" className="btn btn-orange-fade mt-1">Subscribe</button>
+                    <button type="submit" className="btn btn-orange-fade mt-1">Update</button>
                 </form>
             </div>
         </div>

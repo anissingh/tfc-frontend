@@ -1,13 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import '../Common/alerts.css';
-import {useContext, useEffect, useState} from "react";
-import {LoginContext} from "../../clientinfo/clientinfo";
+import {useEffect, useState} from "react";
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
 
 const UpdateSubscriptionModal = ({open, onClose, planId}) => {
 
-    const loginInfo = useContext(LoginContext)
     const [updateSubscriptionNotification, setUpdateSubscriptionNotification] = useState({
         cls: 'notification',
         content: ''
@@ -25,10 +23,10 @@ const UpdateSubscriptionModal = ({open, onClose, planId}) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             },
             body: JSON.stringify({
-                email: loginInfo.email
+                email: localStorage.getItem('EMAIL')
             })
         })
             .then(res => {
@@ -60,7 +58,8 @@ const UpdateSubscriptionModal = ({open, onClose, planId}) => {
             <div className="modal-container" onClick={(event) => {event.stopPropagation()}}>
                 <p className="close-btn" onClick={onClose}>X</p>
                 <div className="usm-flex-container">
-                    <p>Are you sure you want to subscribe?</p>
+                    <p className="mb-0">You currently still have an active subscription.</p>
+                    <p>Are you sure you want to update it?</p>
                     <div className="usm-btn-container">
                         <button className="btn btn-danger" onClick={updateSubscription}>Yes</button>
                         <button className="btn usm-no-btn" onClick={onClose}>No</button>

@@ -3,7 +3,7 @@ import './style.css';
 import '../../Common/modal.css'
 import '../../Common/buttons.css'
 import FilterItem from "../../FilterItem";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 const FilterStudioModal = ({open, onClose, onFilter}) => {
 
@@ -46,13 +46,6 @@ const FilterStudioModal = ({open, onClose, onFilter}) => {
         }
 
     }
-
-    useEffect(() => {
-        setStudioNameFilters([])
-        setStudioAmenityFilters([])
-        setClassNameFilters([])
-        setCoachNameFilters([])
-    }, [])
 
     if(!open) return null
 

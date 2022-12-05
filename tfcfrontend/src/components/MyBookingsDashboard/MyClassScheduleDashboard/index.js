@@ -1,13 +1,11 @@
 import MyClassScheduleItem from "../MyClassScheduleItem";
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {BASE_PORT, BASE_URL} from "../../../settings/settings";
-import {LoginContext} from "../../../clientinfo/clientinfo";
 import '../../Common/alerts.css';
 import './style.css';
 
 const MyClassScheduleDashboard = ({userId}) => {
 
-    const loginInfo = useContext(LoginContext)
     const [classes, setClasses] = useState([])
     const [pageInfo, setPageInfo] = useState({
         page: 1,
@@ -45,11 +43,12 @@ const MyClassScheduleDashboard = ({userId}) => {
     }
 
     useEffect(() => {
-        console.log(userId)
+        if(userId === -1) return
+
         fetch(`http://${BASE_URL}:${BASE_PORT}/studios/classes/user/schedule/${userId}/?page=${pageInfo.page}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             }
         })
             .then(res => {
@@ -61,19 +60,19 @@ const MyClassScheduleDashboard = ({userId}) => {
                 }
             })
             .then(res => {
-                setPageInfo({
+                setPageInfo(pageInfo => ({
                     ...pageInfo,
                     next: res.next,
                     prev: res.previous,
                     count: res.count
-                })
+                }))
                 setClasses(res.results)
             })
             .catch((error) => {
                 console.log(error.message)
             })
 
-    }, [loginInfo.accessToken, userId, pageInfo.page, pageInfo.forceUpdate])
+    }, [userId, pageInfo.page, pageInfo.forceUpdate])
 
     useEffect(() => {
         setUserDropNotification({
@@ -107,6 +106,7 @@ const MyClassScheduleDashboard = ({userId}) => {
                                     enrolled: clsInstance.enrolled,
                                     capacity: clsInstance.capacity,
                                     coach: clsInstance.coach,
+                                    cancelled: clsInstance.cancelled
                                 }} updateParent={updateParent}/>
                             </li>
                         ))}

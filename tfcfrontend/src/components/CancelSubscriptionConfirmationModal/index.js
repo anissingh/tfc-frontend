@@ -1,13 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
-import {useContext, useState} from "react";
-import {LoginContext} from "../../clientinfo/clientinfo";
+import {useState} from "react";
 import '../Common/alerts.css';
 
 const CancelSubscriptionConfirmationModal = ({open, onClose, updateParent}) => {
 
-    const loginInfo = useContext(LoginContext)
     const [cancelSubscriptionNotification, setCancelSubscriptionNotification] = useState({
         cls: 'notification',
         content: ''
@@ -18,10 +16,10 @@ const CancelSubscriptionConfirmationModal = ({open, onClose, updateParent}) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             },
             body: JSON.stringify({
-                email: loginInfo.email
+                email: localStorage.getItem('EMAIL')
             })
         })
             .then(res => {

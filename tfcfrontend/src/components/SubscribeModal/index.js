@@ -2,8 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import '../Common/buttons.css';
 import '../Common/alerts.css';
-import {useContext, useEffect, useState} from "react";
-import {LoginContext, NO_ACCESS_TOKEN} from "../../clientinfo/clientinfo";
+import {useState} from "react";
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
 
 const SubscribeModal = ({open, onClose, planId}) => {
@@ -20,8 +19,6 @@ const SubscribeModal = ({open, onClose, planId}) => {
         cls: 'notification'
     })
 
-    const loginInfo = useContext(LoginContext)
-
     const update = (field, value) => {
         setFormData({...formData, [field]: value})
     }
@@ -29,7 +26,7 @@ const SubscribeModal = ({open, onClose, planId}) => {
     const handleSubmit = (event) => {
         event.preventDefault()
 
-        if(loginInfo.accessToken === NO_ACCESS_TOKEN) {
+        if(localStorage.getItem('ACCESS_TOKEN') === null) {
             setSubscribeNotification({
                 cls: 'notification',
                 content: 'Please login to subscribe.'
@@ -41,10 +38,10 @@ const SubscribeModal = ({open, onClose, planId}) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             },
             body: JSON.stringify({
-                email: loginInfo.email,
+                email: localStorage.getItem('EMAIL'),
                 card_number: formData.cardNumber,
                 cardholder_name: formData.cardHolderName,
                 expiration_date: formData.expDate,
@@ -53,11 +50,12 @@ const SubscribeModal = ({open, onClose, planId}) => {
         })
             .then(res => {
                 if(res.status === 401) {
-                    // TODO: Re-direct to login page?
                     setSubscribeNotification({
                         cls: 'notification',
                         content: 'Access token expired. Please log in again.'
                     })
+                    localStorage.removeItem('ACCESS_TOKEN')
+                    localStorage.removeItem('EMAIL')
                     throw new Error('Access token invalid.')
                 } else if(res.status === 400) {
                     setSubscribeNotification({

@@ -1,8 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css'
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
-import {LoginContext} from "../../clientinfo/clientinfo";
 import DoesNotExist from "../DoesNotExist";
 import ImageSlider from "../ImageSlider";
 import Navbar from "../Navbar/Navbar";
@@ -13,10 +12,6 @@ import '../Common/alerts.css';
 
 const StudioDashboard = ({studioId}) => {
 
-    // TODO: when force update is called, set page number to 1
-    // TODO: Not setting count = 0 on filter to prevent flicker -- make sure this is ok
-
-    const loginInfo = useContext(LoginContext)
     const [studioFound, setStudioFound] = useState(false)
     const [studioInfo, setStudioInfo] = useState({
         name: '',
@@ -73,7 +68,6 @@ const StudioDashboard = ({studioId}) => {
     }
 
     const generateDirectionsLink = () => {
-        // TODO: Detect when user blocks notifications if already allowed
         if (!("geolocation" in navigator)) {
             setGetDirectionsNotification('Location permissions disabled.')
             return
@@ -132,7 +126,7 @@ const StudioDashboard = ({studioId}) => {
                 console.log(error.message)
             })
 
-    }, [loginInfo.accessToken, studioId])
+    }, [studioId])
     
     useEffect(() => {
         let searchParams = new URLSearchParams()
@@ -194,7 +188,7 @@ const StudioDashboard = ({studioId}) => {
                                 <p className="mb-0"><span className="studio-info-title">Postal code: </span>{studioInfo.postalCode}</p>
                                 <p className="mb-1"><span className="studio-info-title">Phone number: </span>{studioInfo.phone}</p>
                                 <button className="btn btn-grey-border-text me-1" onClick={generateDirectionsLink}>Get Directions</button>
-                                <button className="btn btn-orange-border ms-1">View Class Schedule</button>
+                                <button className="btn btn-orange-border ms-1" onClick={() => window.location.replace(`/studios/${studioId}/view/#schedule`)}>View Class Schedule</button>
                                 <p className="notification">{getDirectionsNotification}</p>
                             </div>
                         </div>
@@ -221,7 +215,7 @@ const StudioDashboard = ({studioId}) => {
                         <ImageSlider slides={studioImages}/>
                     </div>
                 ) : <p className="text-center">Images of this studio are currently unavailable.</p>}
-                <h1 className="h3 mt-5 mb-5 align-self-center">Class Schedule</h1>
+                <h1 id="schedule" className="h3 mt-5 mb-5 align-self-center">Class Schedule</h1>
                 <div className="st-dash-club-class-schedule-container">
                     <div className="st-dash-filter-container">
                         <FilterStudioClassSchedule onFilter={onFilter}/>

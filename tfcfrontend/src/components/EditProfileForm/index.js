@@ -1,16 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
-import {useContext, useState} from "react";
+import {useState} from "react";
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
-import {LoginContext, NO_ACCESS_TOKEN} from "../../clientinfo/clientinfo";
 import {capitalizeFirstLetter} from "../../utils/utils";
-import {useNavigate} from "react-router-dom";
 
 
 const EditProfileForm = () => {
-
-    const loginInfo = useContext(LoginContext)
-    const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -36,14 +31,6 @@ const EditProfileForm = () => {
 
     const updateImage = (event) => {
         setFormData({...formData, avatar: event.target.files[0]})
-        // let reader = new FileReader()
-        // reader.readAsDataURL(event.target.files[0])
-        //
-        //
-        // reader.onload = () => {
-        //     setFormData({...formData, avatar: reader.result})
-        //     console.log(reader.result)
-        // }
     }
 
     const validatePasswordEquality = (password1, password2) => {
@@ -66,7 +53,6 @@ const EditProfileForm = () => {
             content: '',
             cls: 'notification'
         })
-        // TODO: Why is the above not setting?
     }
 
     const handleSubmit = (event) => {
@@ -114,15 +100,15 @@ const EditProfileForm = () => {
         fetch(`http://${BASE_URL}:${BASE_PORT}/accounts/edit/`, {
             method: 'PATCH',
             headers: {
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             },
             body: data
         })
         .then(res => {
             if(res.status === 401) {
-                loginInfo.setAccessToken(NO_ACCESS_TOKEN)
+                localStorage.removeItem('ACCESS_TOKEN')
+                localStorage.removeItem('EMAIL')
                 throw new Error('Your session has expired. Please log in again.')
-                // TODO: Display popup that allows user to click login
             } else if(res.status === 400) {
                 return res.json().then(res => {
                     if('email' in res) {
@@ -144,6 +130,9 @@ const EditProfileForm = () => {
                 content: 'Successfully updated your profile.',
                 cls: 'success-notification'
             })
+            if(formData.email !== '') {
+                localStorage.setItem('EMAIL', formData.email)
+            }
             console.log(res)
         })
         .catch((error) => {

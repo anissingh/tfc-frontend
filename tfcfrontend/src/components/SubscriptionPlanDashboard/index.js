@@ -1,10 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import Navbar from "../Navbar/Navbar";
-import {useState, useEffect, useContext} from "react";
+import {useState, useEffect} from "react";
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
 import SubscribeModal from "../SubscribeModal";
-import {LoginContext, NO_ACCESS_TOKEN} from "../../clientinfo/clientinfo";
 import UpdateSubscriptionModal from "../UpdateSubscriptionModal";
 
 const SubscriptionPlanDashboard = () => {
@@ -13,7 +12,6 @@ const SubscriptionPlanDashboard = () => {
     const [openModal, setOpenModal] = useState(false)
     const [openUpdateModal, setOpenUpdateModal] = useState(false)
     const [modalPlanId, setModalPlanId] = useState(0)
-    const loginInfo = useContext(LoginContext)
 
     const [pageInfo, setPageInfo] = useState({
         page: 1,
@@ -35,7 +33,6 @@ const SubscriptionPlanDashboard = () => {
         setPageInfo({...pageInfo, page: pageInfo.page - 1})
     }
 
-    // TODO: Account for pagination here (send paginated data in sets of 3 in backend)
     useEffect(() => {
         fetch(`http://${BASE_URL}:${BASE_PORT}/subscriptions/plans/all/?page=${pageInfo.page}`)
             .then(res => {
@@ -54,7 +51,6 @@ const SubscriptionPlanDashboard = () => {
                 setPlans(res.results)
             })
             .catch((error) => {
-                // TODO: Handle this properly by displaying something to the user
                 console.log(error.message)
             })
     }, [pageInfo.page])
@@ -63,7 +59,7 @@ const SubscriptionPlanDashboard = () => {
     const handleSignup = async (event, id) => {
         event.preventDefault()
 
-        if(loginInfo.accessToken === NO_ACCESS_TOKEN) {
+        if(localStorage.getItem('ACCESS_TOKEN') === null) {
             setModalPlanId(parseInt(id))
             setOpenModal(true)
         }
@@ -75,10 +71,10 @@ const SubscriptionPlanDashboard = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             },
             body: JSON.stringify({
-                email: loginInfo.email
+                email: localStorage.getItem('EMAIL')
             })
         })
             .then(res => {

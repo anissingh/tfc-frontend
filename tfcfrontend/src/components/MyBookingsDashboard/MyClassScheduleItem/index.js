@@ -69,7 +69,9 @@ const MyClassScheduleItem = ({classInfo, updateParent}) => {
                             <LocationOnIcon className="class-schedule-item-pin"/>
                             <span className="class-schedule-item-studio-name">{classInfo.studioName}</span>
                         </p>
-
+                        {classInfo.cancelled ? (
+                            <p className="class-schedule-item-cancelled">Cancelled</p>
+                        ) : null}
                     </div>
                 </div>
                 <div className="col-2 align-self-center">

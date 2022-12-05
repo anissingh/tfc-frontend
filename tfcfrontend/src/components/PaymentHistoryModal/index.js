@@ -2,14 +2,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import {useContext, useEffect, useState} from "react";
 import {BASE_URL, BASE_PORT} from "../../settings/settings";
-import {LoginContext} from "../../clientinfo/clientinfo";
 
 const PaymentHistoryModal = ({open, onClose, userId}) => {
 
     // TODO: Handle pagination
     // TODO: Remove fake data
 
-    const loginInfo = useContext(LoginContext)
     const [payments, setPayments] = useState([])
 
     const beautifyDatePaid = (datePaid) => {
@@ -18,7 +16,7 @@ const PaymentHistoryModal = ({open, onClose, userId}) => {
 
     useEffect(() => {
         fetch(`http://${BASE_URL}:${BASE_PORT}/subscriptions/user/${userId}/payments/history/?page=1`, {
-            headers: {'Authorization': `Bearer ${loginInfo.accessToken}`}
+            headers: {'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`}
         })
             .then(res => {
                 if(res.status !== 200) {
@@ -35,7 +33,7 @@ const PaymentHistoryModal = ({open, onClose, userId}) => {
             .catch((error) => {
                 console.log(error.message)
             })
-    }, [loginInfo.accessToken, userId])
+    }, [userId])
 
     if(!open) return null
 

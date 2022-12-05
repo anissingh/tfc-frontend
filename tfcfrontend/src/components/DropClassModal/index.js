@@ -3,10 +3,9 @@ import './style.css';
 import '../Common/modal.css';
 import '../Common/buttons.css';
 import '../Common/alerts.css';
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {BASE_PORT, BASE_URL} from "../../settings/settings";
-import {LoginContext} from "../../clientinfo/clientinfo";
-import {beautifyDate, capitalizeFirstLetter} from "../../utils/utils";
+import {calculateDuration, capitalizeFirstLetter} from "../../utils/utils";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 
@@ -18,7 +17,6 @@ const DropClassModal = ({open, onClose, classInfo, onDrop}) => {
         cls: '',
         content: ''
     })
-    const loginInfo = useContext(LoginContext)
 
     useEffect(() => {
         fetch(`http://${BASE_URL}:${BASE_PORT}/studios/classes/${classInfo.cls.id}/description/`)
@@ -50,10 +48,10 @@ const DropClassModal = ({open, onClose, classInfo, onDrop}) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             },
             body: JSON.stringify({
-                email: loginInfo.email,
+                email: localStorage.getItem('EMAIL'),
                 date: classInfo.date
             })
         })
@@ -69,6 +67,8 @@ const DropClassModal = ({open, onClose, classInfo, onDrop}) => {
                         cls: 'notification',
                         content: 'Your session has expired. Please log in again.'
                     })
+                    localStorage.removeItem('ACCESS_TOKEN')
+                    localStorage.removeItem('EMAIL')
                     throw new Error('Unrecognized access token.')
                 } else if (res.status === 400) {
                     return res.json().then(res => {
@@ -99,10 +99,10 @@ const DropClassModal = ({open, onClose, classInfo, onDrop}) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             },
             body: JSON.stringify({
-                email: loginInfo.email
+                email: localStorage.getItem('EMAIL')
             })
         })
             .then(res => {
@@ -117,6 +117,8 @@ const DropClassModal = ({open, onClose, classInfo, onDrop}) => {
                         cls: 'notification',
                         content: 'Your session has expired. Please log in again.'
                     })
+                    localStorage.removeItem('ACCESS_TOKEN')
+                    localStorage.removeItem('ACCESS_TOKEN')
                     throw new Error('Unrecognized access token.')
                 } else if (res.status === 400) {
                     return res.json().then(res => {
@@ -154,7 +156,7 @@ const DropClassModal = ({open, onClose, classInfo, onDrop}) => {
                     </div>
                     <div className="row">
                         <p className="h3 text-orange">{classInfo.startTime} - {classInfo.endTime}</p>
-                        <p>Duration: x minutes</p>
+                        <p>Duration: {calculateDuration(classInfo.startTime, classInfo.endTime)} minutes</p>
                     </div>
                     <div className="row">
                         <p className="h3">{classInfo.cls.name}</p>

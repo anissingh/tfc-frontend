@@ -1,23 +1,26 @@
-import {useContext} from "react";
-import {LoginContext, NO_ACCESS_TOKEN} from "../../../clientinfo/clientinfo";
 import LoggedOutNavbar from "../LoggedOut";
 import LoggedInNoSubscriptionNavbar from "../LoggedInNoSubscription";
-
+import {useState} from "react";
 
 const Navbar = () => {
 
-    const loginInfo = useContext(LoginContext)
+    const [accessToken, setAccessToken] = useState(localStorage.getItem('ACCESS_TOKEN'))
 
-    if(loginInfo.accessToken === NO_ACCESS_TOKEN) {
+    const logOut = () => {
+        localStorage.removeItem('ACCESS_TOKEN')
+        localStorage.removeItem('EMAIL')
+        setAccessToken(null)
+    }
+
+    if(accessToken === null || accessToken === undefined) {
         // User is logged out
         return (
             <LoggedOutNavbar />
         )
     } else {
         // User is logged in
-        // TODO: Add functionality for subscription
         return (
-            <LoggedInNoSubscriptionNavbar />
+            <LoggedInNoSubscriptionNavbar logOut={logOut} />
         )
     }
 

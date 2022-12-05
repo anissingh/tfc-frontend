@@ -14,12 +14,23 @@
     margin-bottom: 0.25rem;
 }
 
+.csi-studio-name-container {
+    margin-bottom: 0.25rem;
+}
+
 .class-schedule-item-coach-name {
     font-weight: 500;
 }
 
 .class-schedule-item-studio-name {
     font-size: 0.8rem;
+}
+
+.class-schedule-item-cancelled {
+    font-weight: 600;
+    color: red;
+    text-transform: uppercase;
+    margin-top: 0;
 }
 
 
@@ -39,5 +50,12 @@
 
     .class-schedule-item-studio-name {
         font-size: 0.9rem;
+    }
+
+    .class-schedule-item-cancelled {
+        font-weight: 600;
+        color: red;
+        text-transform: uppercase;
+        align-self: center;
     }
 }

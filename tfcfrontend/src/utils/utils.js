@@ -8,6 +8,15 @@ export const capitalizeFirstLetter = s => {
     }
 }
 
+export const calculateDuration = (startTime, endTime) => {
+    const endTimeHour = parseInt(endTime.slice(0, 2))
+    const endTimeMinute = parseInt(endTime.slice(3, 5))
+    const startTimeHour = parseInt(startTime.slice(0, 2))
+    const startTimeMinute = parseInt(startTime.slice(3, 5))
+
+    return (endTimeHour - startTimeHour) * 60 + (endTimeMinute - startTimeMinute)
+}
+
 export const beautifyDate = (date) => {
     const year = date.slice(0, 4)
     const month = date.slice(5, 7)

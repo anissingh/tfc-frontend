@@ -1,3 +1,19 @@
 .class-schedule-item-background {
     background-color: #f5f3f2;
 }
+
+.class-history-item-cancelled {
+    font-weight: 600;
+    color: red;
+    text-transform: uppercase;
+    margin-top: 0;
+}
+
+@media (min-width: 600px) {
+    .class-schedule-item-cancelled {
+        font-weight: 600;
+        color: red;
+        text-transform: uppercase;
+        align-self: center;
+    }
+}

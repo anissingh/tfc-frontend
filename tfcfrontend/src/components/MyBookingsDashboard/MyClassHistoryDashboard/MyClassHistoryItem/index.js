@@ -56,6 +56,9 @@ const MyClassHistoryItem = ({classInfo, updateParent}) => {
                         <div className="align-self-center">
                             <p>{classInfo.coach}</p>
                         </div>
+                        {classInfo.cancelled ? (
+                            <p className="class-history-item-cancelled">Cancelled</p>
+                        ) : null}
                     </div>
                 </div>
                 <div className="col-2 align-self-center">

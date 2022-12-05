@@ -4,8 +4,6 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import EditProfile from "./pages/editprofile";
 import Home from "./pages/home";
-import {LoginContext} from "./clientinfo/clientinfo";
-import {useState} from "react";
 import ClosestStudios from "./pages/closest-studios";
 import SubscriptionPlans from "./pages/subscription-plans";
 import ViewProfile from "./pages/viewprofile";
@@ -15,13 +13,8 @@ import ViewBookings from "./pages/viewbookings";
 
 function App() {
 
-    const [accessToken, setAccessToken] = useState('')
-    const [email, setEmail] = useState('')
-    const value = { accessToken, email, setAccessToken, setEmail }
-
     return (
         <BrowserRouter>
-            <LoginContext.Provider value={value}>
             <Routes>
                   <Route path="/">
                       <Route path="" element={<Home />} />
@@ -35,7 +28,6 @@ function App() {
                       <Route path="studios/:studioId/view" element={<ViewStudio />} />
                   </Route>
             </Routes>
-            </LoginContext.Provider>
         </BrowserRouter>
     )
 }

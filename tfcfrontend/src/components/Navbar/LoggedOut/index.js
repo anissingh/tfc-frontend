@@ -29,7 +29,7 @@ const LoggedOutNavbar = () => {
                 </ul>
             </div>
 
-            <div className="navbar-collapse my-navbar-end non-hidden-nav-item-block">
+            <div className="navbar-collapse my-navbar-end non-hidden-nav-item-block" style={{margin: '0 170px'}}>
                 <ul className="navbar-nav non-hidden-nav-item-block">
                     <li className="nav-item non-hidden-nav-item-block">
                         <Link className="nav-link my-navbar-link non-hidden-nav-item-inline" to="/login">Login</Link>

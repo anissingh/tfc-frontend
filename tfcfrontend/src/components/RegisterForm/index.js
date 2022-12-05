@@ -5,6 +5,7 @@ import {BASE_URL, BASE_PORT} from "../../settings/settings";
 import {useState} from "react";
 import '../Common/alerts.css'
 import {capitalizeFirstLetter} from "../../utils/utils";
+import {useNavigate} from "react-router-dom";
 
 
 const RegisterForm = () => {
@@ -19,6 +20,8 @@ const RegisterForm = () => {
         'password': '',
         'password2': '',
     })
+
+    const navigate = useNavigate()
 
     const [emailNotification, setEmailNotification] = useState('')
     const [passwordNotification, setPasswordNotification] = useState('')
@@ -69,6 +72,21 @@ const RegisterForm = () => {
             clientSideEvalError = true
         }
 
+        if (formData.email === '') {
+            setEmailNotification('This field may not be blank.')
+            clientSideEvalError = true
+        }
+
+        if (formData.phone === '') {
+            setPhoneNotification('This field may not be blank.')
+            clientSideEvalError = true
+        }
+
+        if (formData.password === '') {
+            setPasswordNotification('This field may not be blank.')
+            clientSideEvalError = true
+        }
+
         if(clientSideEvalError) {
             setRegisterNotification('Please correct the errors above before preceding.')
             return
@@ -108,6 +126,7 @@ const RegisterForm = () => {
             }
         })
         .then(res => {
+            navigate('/login')
             console.log(res)
         })
         .catch((error) => {

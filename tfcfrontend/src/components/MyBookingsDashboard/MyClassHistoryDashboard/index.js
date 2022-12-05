@@ -1,13 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
-import {useContext, useEffect, useState} from "react";
-import {LoginContext} from "../../../clientinfo/clientinfo";
+import {useEffect, useState} from "react";
 import {BASE_PORT, BASE_URL} from "../../../settings/settings";
 import MyClassHistoryItem from "./MyClassHistoryItem";
 
 const MyClassHistoryDashboard = ({userId}) => {
 
-    const loginInfo = useContext(LoginContext)
     const [pageInfo, setPageInfo] = useState({
         page: 1,
         next: null,
@@ -31,11 +29,12 @@ const MyClassHistoryDashboard = ({userId}) => {
     }
 
     useEffect(() => {
-        console.log(userId)
+        if(userId === -1) return
+
         fetch(`http://${BASE_URL}:${BASE_PORT}/studios/classes/user/history/${userId}/?page=${pageInfo.page}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${loginInfo.accessToken}`
+                'Authorization': `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`
             }
         })
             .then(res => {
@@ -47,19 +46,19 @@ const MyClassHistoryDashboard = ({userId}) => {
                 }
             })
             .then(res => {
-                setPageInfo({
+                setPageInfo(pageInfo => ({
                     ...pageInfo,
                     next: res.next,
                     prev: res.previous,
                     count: res.count,
-                })
+                }))
                 setClasses(res.results)
             })
             .catch((error) => {
                 console.log(error.message)
             })
 
-    }, [loginInfo.accessToken, userId, pageInfo.page])
+    }, [userId, pageInfo.page])
 
     return (
         <>
@@ -85,6 +84,7 @@ const MyClassHistoryDashboard = ({userId}) => {
                                     enrolled: clsInstance.enrolled,
                                     capacity: clsInstance.capacity,
                                     coach: clsInstance.coach,
+                                    cancelled: clsInstance.cancelled
                                 }}/>
                             </li>
                         ))}

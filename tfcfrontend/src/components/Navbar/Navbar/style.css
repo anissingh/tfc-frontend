@@ -1,17 +1,21 @@
 .my-navbar {
     height: 6vh;
+    align-items: center!important;
 }
 
 .my-navbar-brand {
     padding-left: 0.5rem!important;
-    margin-left: 10vw!important;
-    margin-right: 10vw!important;
+    margin: 0 100px;
+    display: flex;
     font-weight: 600!important;
     color: white;
+    justify-content: center!important;
 }
 
 .my-navbar-main {
     justify-content: center;
+    display: flex;
+    margin: 0 auto;
 }
 
 .my-navbar-link {
@@ -20,7 +24,8 @@
 
 .my-navbar-end {
     justify-content: end;
-    margin-right: 10vw!important;
+    flex-grow: 0!important;
+    margin: 0 100px;
 }
 
 .my-navbar-dropdown {
